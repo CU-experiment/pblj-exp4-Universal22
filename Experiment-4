@@ -1,0 +1,288 @@
+Chapter-4[Collection Framework and MultiThreading]
+(i)Easy Level:
+Code:-
+import java.util.ArrayList;
+import java.util.Scanner;
+class Employee {
+    private int id;
+    private String name;
+    private double salary;
+    public Employee(int id, String name, double salary) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+    }
+    public int getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+    public double getSalary() {
+        return salary;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+    @Override
+    public String toString() {
+        return "Employee ID: " + id + ", Name: " + name + ", Salary: " + salary;
+    }
+}
+public class EmployeeManagement {
+    private ArrayList<Employee> employees;
+    private Scanner scanner;
+    public EmployeeManagement() {
+        employees = new ArrayList<>();
+        scanner = new Scanner(System.in);
+    }
+    public void addEmployee() {
+        System.out.print("Enter Employee ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        System.out.print("Enter Employee Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter Employee Salary: ");
+        double salary = scanner.nextDouble();
+        employees.add(new Employee(id, name, salary));
+        System.out.println("Employee added successfully.");
+    }
+    public void updateEmployee() {
+        System.out.print("Enter Employee ID to update: ");
+        int id = scanner.nextInt();
+        for (Employee emp : employees) {
+            if (emp.getId() == id) {
+                System.out.print("Enter new Name: ");
+                scanner.nextLine(); // Consume newline
+                String name = scanner.nextLine();
+                System.out.print("Enter new Salary: ");
+                double salary = scanner.nextDouble();
+                emp.setName(name);
+                emp.setSalary(salary);
+                System.out.println("Employee updated successfully.");
+                return;
+            }
+        }
+        System.out.println("Employee not found.");
+    }
+    public void removeEmployee() {
+        System.out.print("Enter Employee ID to remove: ");
+        int id = scanner.nextInt();
+        for (Employee emp : employees) {
+            if (emp.getId() == id) {
+                employees.remove(emp);
+                System.out.println("Employee removed successfully.");
+                return;
+            }
+        }
+        System.out.println("Employee not found.");
+    }
+    public void searchEmployee() {
+        System.out.print("Enter Employee ID to search: ");
+        int id = scanner.nextInt();
+        for (Employee emp : employees) {
+            if (emp.getId() == id) {
+                System.out.println(emp);
+                return;
+            }
+        }
+        System.out.println("Employee not found.");
+    }
+    public void displayAllEmployees() {
+        if (employees.isEmpty()) {
+            System.out.println("No employees found.");
+        } else {
+            for (Employee emp : employees) {
+                System.out.println(emp);
+            }
+        }
+    }
+    public static void main(String[] args) {
+        EmployeeManagement management = new EmployeeManagement();
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        do {
+            System.out.println("\nEmployee Management System");
+            System.out.println("1. Add Employee");
+            System.out.println("2. Update Employee");
+            System.out.println("3. Remove Employee");
+            System.out.println("4. Search Employee");
+            System.out.println("5. Display All Employees");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    management.addEmployee();
+                    break;
+                case 2:
+                    management.updateEmployee();
+                    break;
+                case 3:
+                    management.removeEmployee();
+                    break;
+                case 4:
+                    management.searchEmployee();
+                    break;
+                case 5:
+                    management.displayAllEmployees();
+                    break;
+                case 6:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 6);
+
+        scanner.close();
+    }
+}
+
+(ii)Medium Level:
+Code:
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+class Card {
+    private String rank;
+    private String suit;
+    public Card(String rank, String suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+    public String getRank() {
+        return rank;
+    }
+    public String getSuit() {
+        return suit;
+    }
+    @Override
+    public String toString() {
+        return rank + " of " + suit;
+    }
+}
+public class CardCollection {
+    private Collection<Card> cards;
+    public CardCollection() {
+        cards = new ArrayList<>();
+        initializeCards();
+    }
+    private void initializeCards() {
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        for (String suit : suits) {
+            for (String rank : ranks) {
+                cards.add(new Card(rank, suit));
+            }
+        }
+    }
+    public List<Card> findCardsBySuit(String suit) {
+        List<Card> foundCards = new ArrayList<>();
+        for (Card card : cards) {
+            if (card.getSuit().equalsIgnoreCase(suit)) {
+                foundCards.add(card);
+            }
+        }
+        return foundCards;
+    }
+    public void displayAllCards() {
+        for (Card card : cards) {
+            System.out.println(card);
+        }
+    }
+    public static void main(String[] args) {
+        CardCollection cardCollection = new CardCollection();
+        Scanner scanner = new Scanner(System.in);
+        String suit;
+        System.out.println("All Cards in the Collection:");
+        cardCollection.displayAllCards();
+        System.out.print("\nEnter a suit to find all cards (Hearts, Diamonds, Clubs, Spades): ");
+        suit = scanner.nextLine();
+        List<Card> foundCards = cardCollection.findCardsBySuit(suit);
+        if (foundCards.isEmpty()) {
+            System.out.println("No cards found for the suit: " + suit);
+        } else {
+            System.out.println("Cards found for the suit " + suit + ":");
+            for (Card card : foundCards) {
+                System.out.println(card);
+            }
+        }
+        scanner.close();
+    }
+}
+
+(iii)High Level:
+Code:
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+class TicketBookingSystem {
+    private final int totalSeats;
+    private int availableSeats;
+    private final Lock lock = new ReentrantLock();
+    public TicketBookingSystem(int totalSeats) {
+        this.totalSeats = totalSeats;
+        this.availableSeats = totalSeats;
+    }
+    public void bookTicket(String customerName) {
+        lock.lock();
+        try {
+            if (availableSeats > 0) {
+                System.out.println(customerName + " booked a ticket. Seats left: " + (availableSeats - 1));
+                availableSeats--;
+            } else {
+                System.out.println("No seats available for " + customerName);
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+}
+class BookingThread extends Thread {
+    private final TicketBookingSystem bookingSystem;
+    private final String customerName;
+    public BookingThread(TicketBookingSystem bookingSystem, String customerName) {
+        this.bookingSystem = bookingSystem;
+        this.customerName = customerName;
+    }
+    @Override
+    public void run() {
+        bookingSystem.bookTicket(customerName);
+    }
+}
+public class TicketBookingApp {
+    public static void main(String[] args) {
+        TicketBookingSystem bookingSystem = new TicketBookingSystem(5); 
+        BookingThread vip1 = new BookingThread(bookingSystem, "VIP Customer 1");
+        BookingThread vip2 = new BookingThread(bookingSystem, "VIP Customer 2");
+        vip1.setPriority(Thread.MAX_PRIORITY);
+        vip2.setPriority(Thread.MAX_PRIORITY);
+        BookingThread regular1 = new BookingThread(bookingSystem, "Regular Customer 1");
+        BookingThread regular2 = new BookingThread(bookingSystem, "Regular Customer 2");
+        BookingThread regular3 = new BookingThread(bookingSystem, "Regular Customer 3");
+        vip1.start();
+        vip2.start();
+        regular1.start();
+        regular2.start();
+        regular3.start();
+        try {
+            vip1.join();
+            vip2.join();
+            regular1.join();
+            regular2.join();
+            regular3.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Booking process completed. Available seats: " + bookingSystem.getAvailableSeats());
+    }
+}
